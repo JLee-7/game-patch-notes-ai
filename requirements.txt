@@ -1,0 +1,8 @@
+streamlit
+requests
+openai
+python-dotenv
+beautifulsoup4
+lxml
+diskcache
+python-dateutil
