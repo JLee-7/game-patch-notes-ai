@@ -13,8 +13,8 @@ class AIClient:
         )
         self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
-    def summarize_patch(self, title: str, contents: str) -> str:
-        if not contents.strip():
+    def summarize_patch(self, title: str, contents: Optional[str]) -> str:
+        if not contents or not contents.strip():
             return "No content available to summarize."
 
         prompt = f"""You are a sharp gaming analyst. Summarize this patch notes entry.
@@ -38,7 +38,10 @@ Keep concise but informative. Use bullet points. No fluff."""
                 temperature=0.3,
                 max_tokens=800,
             )
-            return response.choices[0].message.content.strip()
+            content = response.choices[0].message.content
+            if content is None:
+                return "AI summary failed: the model returned no summary content."
+            return content.strip()
         except Exception as e:
             return f"AI summary failed: {e}"
 
@@ -63,6 +66,9 @@ Keep concise but informative. Use bullet points. No fluff."""
                 temperature=0.4,
                 max_tokens=600,
             )
-            return response.choices[0].message.content.strip()
+            content = response.choices[0].message.content
+            if content is None:
+                return "Chat failed: the model returned no response content."
+            return content.strip()
         except Exception as e:
             return f"Chat failed: {e}"
